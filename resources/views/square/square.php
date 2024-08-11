@@ -1,7 +1,5 @@
 <?php
 
-use function PHPSTORM_META\type;
-
 require_once("../../../Class/Square.class.php");
 require_once("../../../Class/Database.class.php");
 

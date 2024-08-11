@@ -114,7 +114,7 @@ class Square
             $finalName = time() . '.' . $extension;
     
             if (!file_exists('Storage/img')) {
-                mkdir('Storage/img', 0777, true);
+                mkdir($_SERVER['DOCUMENT_ROOT'].'/Storage/img', 0777, true);
             }
     
             $absolutePath = $_SERVER['DOCUMENT_ROOT'] . '/Storage/img/' . $finalName;
