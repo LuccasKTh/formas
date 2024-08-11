@@ -1,28 +1,36 @@
 <?php
-require_once("../../classes/Square.class.php");
-require_once("../../classes/Database.class.php");
+
+use function PHPSTORM_META\type;
+
+require_once("../../../Class/Square.class.php");
+require_once("../../../Class/Database.class.php");
 
 $id = isset($_GET['id']) ? $_GET['id'] : 0;
 $msg = isset($_GET['msg']) ? $_GET['msg'] : 0;
 $type = isset($_GET['type']) ? $_GET['type'] : 0;
 
 if ($id > 0) {
-    $quadrado = Quadrado::show($id);
+    $quadrado = Square::show($id);
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id = isset($_POST['id']) ? $_POST['id'] : 0;
     $height = isset($_POST['height']) ? $_POST['height'] : 0;
-    $backgroundType = isset($_POST['backgroundType']) ? $_POST['backgroundType'] : false;
-    $background = isset($_POST['background']) ? $_POST['background'] : '';
-    $color = isset($_POST['color']) ? $_POST['color'] : '';
+    $backgroundType = isset($_POST['backgroundType']) ? $_POST['backgroundType'] = 1 : 0;
     $idMeasurement = isset($_POST['idMeasurement']) ? $_POST['idMeasurement'] : 0;
+    if ($backgroundType) {
+        $background = isset($_FILES['background']) ? $_FILES['background'] : '';
+        $color = 0;
+    } else {
+        $color = isset($_POST['color']) ? $_POST['color'] : '';
+        $background = 0;
+    }
 
     $acao = isset($_POST['acao']) ? $_POST['acao'] : 0;
 
     try {
         $measure = Measure::show($idMeasurement);
-        $quadrado = new Quadrado($id,  $height, $backgroundType, $background, $color, $measure);
+        $quadrado = new Square($id, $height, $backgroundType, $background, $color, $measure);
     } catch (Exception $e) {
         header('Location: index.php?msg=ERROR:' . $e->getMessage());
     }
@@ -54,6 +62,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 } else if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $busca = isset($_GET['busca']) ? $_GET['busca'] : 0;
     $tipo = isset($_GET['tipo']) ? $_GET['tipo'] : 0;
-    $quadrados = Quadrado::index($tipo, $busca);
+    $quadrados = Square::index($tipo, $busca);
     $measures = Measure::index(0, '');
 }

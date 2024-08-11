@@ -7,9 +7,11 @@ create table measure (
 
 create table square (
     id int primary key auto_increment,
+    height int not null,
+    backgroundType int not null,
+    background varchar(45),
     color varchar(45),
-    height int,
-    id_measure int,
+    id_measure int not null,
     foreign key (id_measure) references measure(id)
 );
 

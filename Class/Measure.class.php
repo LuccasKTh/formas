@@ -70,7 +70,7 @@ class Measure
 
         try {
             return Database::executar($sql, $parametros);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             return false;
         }
     }

@@ -25,34 +25,54 @@
 
                         <?php include('../components/message.php') ?>
                         
-                        <form method='post' action="square.php">
+                        <form method='post' action="square.php" enctype="multipart/form-data">
+                            <input type="hidden" name="id" id="id" value="<?= $id ? $quadrado->getId() : 0 ?>" readonly>
 
                             <div class="collapse <?= $quadrado ? 'collapse-open' : null ?> collapse-arrow bg-base-200 border border-primary mb-4">
                                 <input type="checkbox" />
                                 <div class="collapse-title text-xl font-medium">Novo quadrado</div>
                                 <div class="collapse-content">
-                                    <div class="grid grid-cols-4 gap-x-4">
+                                    <div class="grid grid-cols-11 gap-x-4">
 
-                                        <div class="col-span-4 flex w-full flex-col">
+                                        <div class="col-span-12 flex w-full flex-col">
                                             <div class="divider divider-neutral">quadrado</div>
                                         </div>
 
-                                        <input type="hidden" name="id" id="id" value="<?= $id ? $quadrado->getId() : 0 ?>" readonly> <!-- serve para verificar se o array quadrado existe, caso não exista, a variável será 0-->
-                                        <label for="color" class="form-control w-full max-w-xs">
-                                            <div class="label">
-                                                <span class="label-text">Qual é a cor?</span>
-                                            </div>
-                                            <input type="color" name="color" id="color" value="<?= $id ? $quadrado->getColor() : '' ?>" class="input input-bordered input-sm w-full max-w-xs" />
-                                        </label>
-
-                                        <label for="height" class="form-control w-full max-w-xs">
+                                        <label for="height" class="col-span-2 form-control w-full max-w-xs">
                                             <div class="label">
                                                 <span class="label-text">Qual é a altura?</span>
                                             </div>
                                             <input type="number" name="height" id="height" value="<?= $id ? $quadrado->getHeight() : 0 ?>" class="input input-bordered input-sm w-full max-w-xs" />
                                         </label>
 
-                                        <label for="idMeasurement" class="form-control w-full max-w-xs">
+                                        <label for="color" class="col-span-3 form-control w-full max-w-xs">
+                                            <div class="label">
+                                                <span class="label-text">Qual é a cor?</span>
+                                            </div>
+                                            <input 
+                                                type="color" 
+                                                name="color" 
+                                                id="color" 
+                                                value="<?= $id ? $quadrado->getColor() : '' ?>" 
+                                                class="input input-bordered input-sm w-full max-w-xs"
+                                            />
+                                        </label>
+                                        
+                                        <label for="backgroundType" class="col-span-1 form-control w-full max-w-xs">
+                                            <div class="label">
+                                                <span class="label-text">Fundo</span>
+                                            </div>
+                                            <input type="checkbox" name="backgroundType" id="backgroundType" class="toggle toggle-lg" />
+                                        </label>
+
+                                        <label for="background" class="col-span-3 form-control w-full max-w-xs">
+                                            <div class="label">
+                                                <span class="label-text">Qual é a imagem?</span>
+                                            </div>
+                                            <input type="file" name="background" id="background" class="file-input file-input-bordered file-input-sm w-full max-w-xs" accept="image/*">
+                                        </label>
+
+                                        <label for="idMeasurement" class="col-span-2 form-control w-full max-w-xs">
                                             <div class="label">
                                                 <span class="label-text">Qual é a medida?</span>
                                             </div>
@@ -68,13 +88,6 @@
                                                 }
                                                 ?>
                                             </select>
-                                        </label>
-
-                                        <label for="background" class="form-control w-full max-w-xs">
-                                            <div class="label">
-                                                <span class="label-text">Imagem de fundo?</span>
-                                            </div>
-                                            <input type="file" name="background" id="background" class="file-input file-input-bordered file-input-sm w-full max-w-xs" accept="image/*">
                                         </label>
 
                                     </div>
@@ -168,6 +181,8 @@
             </div>
         </div>
     </div>
+
+    <script src="../../js/toggleBackgroundType.js"></script>
 
 </body>
 </html>

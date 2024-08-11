@@ -1,6 +1,6 @@
 <?php
 
-require_once ('../../config/config.inc.php');
+require_once ('../../../config/config.inc.php');
 
 class Database
 {
@@ -9,8 +9,8 @@ class Database
     public static function getInstance()
     {
         try {
-            return new PDO(DSN, USUARIO, SENHA);
-        } catch(PDOException $e) {
+            return new \PDO(DSN, USUARIO, SENHA);
+        } catch(\PDOException $e) {
             echo "Erro ao conectar ao banco de dados". $e->getMessage();
         }
     }
@@ -43,8 +43,8 @@ class Database
         try {
             $comando->execute();
             return $comando;
-        } catch (PDOException $e) {
-            throw new Exception("Erro ao executar o comamando no banco de dados: {$e->getMessage()}. - {$comando->errorInfo()[2]}");
+        } catch (\PDOException $e) {
+            throw new \Exception("Erro ao executar o comamando no banco de dados: {$e->getMessage()}. - {$comando->errorInfo()[2]}");
         }
     }
 }
