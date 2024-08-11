@@ -149,8 +149,34 @@ class Square
     {
         $sql = 'UPDATE square SET height = :height, backgroundType = :backgroundType, background = :background, color = :color, id_measure = :id_measure WHERE id = :id';
 
+        if ($this->getBackgroundType()) {
+            $background = $this->getBackground();
+            $pathinfo = pathinfo($background['name']);
+            $extension = $pathinfo['extension'];
+            $finalName = time() . '.' . $extension;
+    
+            if (!file_exists('Storage/img')) {
+                mkdir('Storage/img', 0777, true);
+            }
+    
+            $absolutePath = $_SERVER['DOCUMENT_ROOT'] . '/Storage/img/' . $finalName;
+    
+            if (move_uploaded_file($background['tmp_name'], $absolutePath)) {
+                $params = [
+                    ':height' => $this->getHeight(),
+                    ':backgroundType' => $this->getBackgroundType(),
+                    ':background' => $finalName,
+                    ':color' => $this->getColor(),
+                    ':id_measure' => $this->getMeasure()->getId()
+                ];
+        
+                return Database::executar($sql, $params);
+            } else {
+                return false;
+            }
+        }
+
         $params = [
-            ':id' => $this->getId(),
             ':height' => $this->getHeight(),
             ':backgroundType' => $this->getBackgroundType(),
             ':background' => $this->getBackground(),
@@ -246,10 +272,15 @@ class Square
 
     public function draw()
     {
+        $this->getBackgroundType()
+            ? $type = "background-image: url(../../../Storage/img/".$this->getBackground().");
+                       background-size: contain;'>"
+            : $type = "background-color: ".$this->getColor()."'>";
+
         return "<div style='
                     width: ".$this->getHeight().$this->getMeasure()->getMeasurement()."; 
                     height: ".$this->getHeight().$this->getMeasure()->getMeasurement().";
-                    background-color: ".$this->getColor()."'>
+                    $type
                 </div>";    
     }
 }

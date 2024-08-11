@@ -19,7 +19,7 @@
             <div class="absolute p-6">
                 <?php include('../components/menu.php') ?>
             </div>
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-6">
+            <div class="max-w-7xl mx-auto px-20 2xl:px-12">
                 <div class="overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900 dark:text-gray-100">
 
@@ -113,10 +113,16 @@
                         </form>
 
                         <?php if (isset($quadrado)) { ?>
-                            <div class="flex w-full justify-center">
-                                <?= $quadrado->draw() ?>
-                            </div>
-                        <?php } ?>
+                            <?php if ($quadrado->getBackgroundType()) { ?>
+                                <div class="flex w-full justify-center">
+                                    <?= $quadrado->draw() ?>
+                                </div>
+                            <?php } else {?>
+                                <div class="flex w-full justify-center">
+                                    <?= $quadrado->draw() ?>
+                                </div>
+                            <?php } ?>
+                        <?php }  ?>
 
                         <div class="flex w-full flex-col">
                             <div class="divider">Lista de quadrados</div>
@@ -165,7 +171,7 @@
                                                 foreach ($quadrados as $quadrado) { ?>
                                                     <tr>
                                                         <td><a href='index.php?id=<?= $quadrado->getId() ?>' class="link"><?= $quadrado->getId() ?></a></td>
-                                                        <td><?= $quadrado->getColor() ?></td>
+                                                        <td><?= $quadrado->getBackgroundType() ?  $quadrado->getBackground() : $quadrado->getColor() ?></td>
                                                         <td><?= $quadrado->getHeight() ?></td>
                                                         <td><?= $quadrado->getMeasure()->getMeasurement() ?></a></td>
                                                     </tr>
