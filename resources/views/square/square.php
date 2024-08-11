@@ -17,11 +17,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $backgroundType = isset($_POST['backgroundType']) ? $_POST['backgroundType'] = 1 : 0;
     $idMeasurement = isset($_POST['idMeasurement']) ? $_POST['idMeasurement'] : 0;
     if ($backgroundType) {
-        $background = isset($_FILES['background']) ? $_FILES['background'] : '';
+        $background = isset($_FILES['background']) ? $_FILES['background'] : 0;
         $color = 0;
     } else {
-        $color = isset($_POST['color']) ? $_POST['color'] : '';
         $background = 0;
+        $color = isset($_POST['color']) ? $_POST['color'] : 0;
     }
 
     $acao = isset($_POST['acao']) ? $_POST['acao'] : 0;

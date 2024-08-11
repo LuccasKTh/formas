@@ -3,7 +3,7 @@ var color = document.getElementById('color');
 var background = document.getElementById('background');
 
 document.addEventListener('DOMContentLoaded', function () {
-    toogleBackgroundType(this);
+    toogleBackgroundType(checkbox);
     checkbox.addEventListener('change', function () {
         toogleBackgroundType(this);
     })

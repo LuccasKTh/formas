@@ -150,32 +150,39 @@ class Square
         $sql = 'UPDATE square SET height = :height, backgroundType = :backgroundType, background = :background, color = :color, id_measure = :id_measure WHERE id = :id';
 
         $square = Square::show($this->getId());
-
         $background = $square->getBackground();
         unlink($_SERVER['DOCUMENT_ROOT'] . "/Storage/img/$background");
 
         if ($this->getBackgroundType()) {
-            $newBackground = $this->getBackground();
-            $pathinfo = pathinfo($newBackground['name']);
-            $extension = $pathinfo['extension'];
-            $time = explode('.', $background)[0];
-            $finalName = $time . '.' . $extension;
+            if ($this->getBackground()['size']) {
     
-            $absolutePath = $_SERVER['DOCUMENT_ROOT'] . '/Storage/img/' . $finalName;
-    
-            if (move_uploaded_file($newBackground['tmp_name'], $absolutePath)) {
-                $params = [
-                    ':id' => $this->getId(),
-                    ':height' => $this->getHeight(),
-                    ':backgroundType' => $this->getBackgroundType(),
-                    ':background' => $finalName,
-                    ':color' => $this->getColor(),
-                    ':id_measure' => $this->getMeasure()->getId()
-                ];
+                $newBackground = $this->getBackground();
+                $pathinfo = pathinfo($newBackground['name']);
+                $extension = $pathinfo['extension'];
+
+                if ($square->getBackground()) {
+                    $time = explode('.', $background)[0];
+                    $finalName = $time . '.' . $extension;
+                } else {
+                    $finalName = time() . '.' . $extension;
+                }
         
-                return Database::executar($sql, $params);
-            } else {
-                return false;
+                $absolutePath = $_SERVER['DOCUMENT_ROOT'] . '/Storage/img/' . $finalName;
+        
+                if (move_uploaded_file($newBackground['tmp_name'], $absolutePath)) {
+                    $params = [
+                        ':id' => $this->getId(),
+                        ':height' => $this->getHeight(),
+                        ':backgroundType' => $this->getBackgroundType(),
+                        ':background' => $finalName,
+                        ':color' => $this->getColor(),
+                        ':id_measure' => $this->getMeasure()->getId()
+                    ];
+            
+                    return Database::executar($sql, $params);
+                } else {
+                    return false;
+                }
             }
         }
 
@@ -183,7 +190,7 @@ class Square
             ':id' => $this->getId(),
             ':height' => $this->getHeight(),
             ':backgroundType' => $this->getBackgroundType(),
-            ':background' => $this->getBackground(),
+            ':background' => $square->getBackground(),
             ':color' => $this->getColor(),
             ':id_measure' => $this->getMeasure()->getId()
         ];
@@ -194,6 +201,9 @@ class Square
     public function destroy()
     {
         $sql = 'DELETE FROM square WHERE id = :id';
+
+        $square = Square::show($this->getId());
+        unlink($_SERVER['DOCUMENT_ROOT'] . "/Storage/img/{$square->getBackground()}");
         
         $params = [':id' => $this->getId()];
 
