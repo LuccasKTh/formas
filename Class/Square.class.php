@@ -149,20 +149,23 @@ class Square
     {
         $sql = 'UPDATE square SET height = :height, backgroundType = :backgroundType, background = :background, color = :color, id_measure = :id_measure WHERE id = :id';
 
+        $square = Square::show($this->getId());
+
+        $background = $square->getBackground();
+        unlink($_SERVER['DOCUMENT_ROOT'] . "/Storage/img/$background");
+
         if ($this->getBackgroundType()) {
-            $background = $this->getBackground();
-            $pathinfo = pathinfo($background['name']);
+            $newBackground = $this->getBackground();
+            $pathinfo = pathinfo($newBackground['name']);
             $extension = $pathinfo['extension'];
-            $finalName = time() . '.' . $extension;
-    
-            if (!file_exists('Storage/img')) {
-                mkdir('Storage/img', 0777, true);
-            }
+            $time = explode('.', $background)[0];
+            $finalName = $time . '.' . $extension;
     
             $absolutePath = $_SERVER['DOCUMENT_ROOT'] . '/Storage/img/' . $finalName;
     
-            if (move_uploaded_file($background['tmp_name'], $absolutePath)) {
+            if (move_uploaded_file($newBackground['tmp_name'], $absolutePath)) {
                 $params = [
+                    ':id' => $this->getId(),
                     ':height' => $this->getHeight(),
                     ':backgroundType' => $this->getBackgroundType(),
                     ':background' => $finalName,
@@ -177,6 +180,7 @@ class Square
         }
 
         $params = [
+            ':id' => $this->getId(),
             ':height' => $this->getHeight(),
             ':backgroundType' => $this->getBackgroundType(),
             ':background' => $this->getBackground(),
@@ -274,7 +278,7 @@ class Square
     {
         $this->getBackgroundType()
             ? $type = "background-image: url(../../../Storage/img/".$this->getBackground().");
-                       background-size: contain;'>"
+                       background-size: 100% 100%;'>"
             : $type = "background-color: ".$this->getColor()."'>";
 
         return "<div style='

@@ -62,7 +62,7 @@
                                             <div class="label">
                                                 <span class="label-text">Fundo</span>
                                             </div>
-                                            <input type="checkbox" name="backgroundType" id="backgroundType" class="toggle toggle-lg" />
+                                            <input type="checkbox" name="backgroundType" id="backgroundType" <?= isset($quadrado) && $quadrado->getBackgroundType() ? 'checked' : null ?> class="toggle toggle-lg" />
                                         </label>
 
                                         <label for="background" class="col-span-3 form-control w-full max-w-xs">
