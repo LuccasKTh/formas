@@ -1,40 +1,17 @@
 <?php
 
 require_once("../../../Class/Measure.class.php");
+require_once("../Class/Shape.class.php");
 
-class Square 
+class Square extends Shape
 {
-    private int $id;
     private int $height;
-    private int $backgroundType;
-    private string $color;
-    private $background;
-    private ?Measure $measure;
 
-    public function __construct(
-        $id, 
-        $height, 
-        $backgroundType, 
-        $background, 
-        $color, 
-        Measure $measure
-    ) {
-        $this->setId($id);
+    public function __construct($id, $height, $backgroundType, $background, $color, Measure $measure) {
+        parent::__construct($id, $backgroundType, $background, $color, $measure);
         $this->setHeight($height);
-        $this->setBackgroundType($backgroundType);
-        $this->setBackground($background);
-        $this->setColor($color);
-        $this->setMeasure($measure);
     }
 
-    public function setId($newId)
-    {
-        if ($newId < 0) {
-            throw new Exception("Error: Id inválido!");
-        } else {
-            $this->id = $newId;
-        }
-    }
 
     public function setHeight($newHeight)
     {
@@ -44,63 +21,10 @@ class Square
             $this->height = $newHeight;
         }
     }
-
-    public function setBackgroundType($newBackgroundType)
-    {
-        if ($newBackgroundType != true && $newBackgroundType != false) {
-            throw new Exception("Error: Tipo de background inválido");
-        } else {
-            $this->backgroundType = $newBackgroundType;
-        }
-    }
-    
-    public function setColor($newColor)
-    {
-        $this->color = $newColor;
-    }
-
-    public function setBackground($newBackground)
-    {
-        $this->background = $newBackground;
-    }
-
-    public function setMeasure($newMeasure)
-    {
-        if ($newMeasure == null) {
-            throw new Exception("Error: Medida inválida!");
-        } else {
-            $this->measure = $newMeasure;
-        }
-    }
-
-    public function getId()
-    {
-        return $this->id;    
-    }
     
     public function getHeight()
     {
         return $this->height;    
-    }
-    
-    public function getBackgroundType()
-    {
-        return $this->backgroundType;
-    }
-    
-    public function getBackground()
-    {
-        return $this->background; 
-    }
-
-    public function getColor()
-    {
-        return $this->color;    
-    }
-
-    public function getMeasure()
-    {
-        return $this->measure;    
     }
 
     public function store()
@@ -108,29 +32,31 @@ class Square
         $sql = 'INSERT INTO square (height, backgroundType, background, color, id_measure) VALUES (:height, :backgroundType, :background, :color, :id_measure)';
 
         if ($this->getBackgroundType()) {
-            $background = $this->getBackground();
-            $pathinfo = pathinfo($background['name']);
-            $extension = $pathinfo['extension'];
-            $finalName = time() . '.' . $extension;
-    
-            if (!file_exists('Storage/img')) {
-                mkdir($_SERVER['DOCUMENT_ROOT'].'/Storage/img', 0777, true);
-            }
-    
-            $absolutePath = $_SERVER['DOCUMENT_ROOT'] . '/Storage/img/' . $finalName;
-    
-            if (move_uploaded_file($background['tmp_name'], $absolutePath)) {
-                $params = [
-                    ':height' => $this->getHeight(),
-                    ':backgroundType' => $this->getBackgroundType(),
-                    ':background' => $finalName,
-                    ':color' => $this->getColor(),
-                    ':id_measure' => $this->getMeasure()->getId()
-                ];
+            if ($this->getBackground()['size']) {
+                $background = $this->getBackground();
+                $pathinfo = pathinfo($background['name']);
+                $extension = $pathinfo['extension'];
+                $finalName = time() . '.' . $extension;
         
-                return Database::executar($sql, $params);
-            } else {
-                return false;
+                if (!file_exists('Storage/img')) {
+                    mkdir($_SERVER['DOCUMENT_ROOT'].'/Storage/img', 0777, true);
+                }
+        
+                $absolutePath = $_SERVER['DOCUMENT_ROOT'] . '/Storage/img/' . $finalName;
+        
+                if (move_uploaded_file($background['tmp_name'], $absolutePath)) {
+                    $params = [
+                        ':height' => $this->getHeight(),
+                        ':backgroundType' => $this->getBackgroundType(),
+                        ':background' => $finalName,
+                        ':color' => $this->getColor(),
+                        ':id_measure' => $this->getMeasure()->getId()
+                    ];
+            
+                    return Database::executar($sql, $params);
+                } else {
+                    return false;
+                }
             }
         }
 
@@ -151,11 +77,12 @@ class Square
 
         $square = Square::show($this->getId());
         $background = $square->getBackground();
-        unlink($_SERVER['DOCUMENT_ROOT'] . "/Storage/img/$background");
 
         if ($this->getBackgroundType()) {
             if ($this->getBackground()['size']) {
-    
+                if ($background) {
+                    unlink($_SERVER['DOCUMENT_ROOT'] . "/Storage/img/$background");
+                }
                 $newBackground = $this->getBackground();
                 $pathinfo = pathinfo($newBackground['name']);
                 $extension = $pathinfo['extension'];
@@ -165,6 +92,10 @@ class Square
                     $finalName = $time . '.' . $extension;
                 } else {
                     $finalName = time() . '.' . $extension;
+                }
+
+                if (!file_exists('Storage/img')) {
+                    mkdir($_SERVER['DOCUMENT_ROOT'].'/Storage/img', 0777, true);
                 }
         
                 $absolutePath = $_SERVER['DOCUMENT_ROOT'] . '/Storage/img/' . $finalName;
@@ -178,7 +109,6 @@ class Square
                         ':color' => $this->getColor(),
                         ':id_measure' => $this->getMeasure()->getId()
                     ];
-            
                     return Database::executar($sql, $params);
                 } else {
                     return false;
@@ -190,7 +120,7 @@ class Square
             ':id' => $this->getId(),
             ':height' => $this->getHeight(),
             ':backgroundType' => $this->getBackgroundType(),
-            ':background' => $square->getBackground(),
+            ':background' => $background,
             ':color' => $this->getColor(),
             ':id_measure' => $this->getMeasure()->getId()
         ];
@@ -202,8 +132,7 @@ class Square
     {
         $sql = 'DELETE FROM square WHERE id = :id';
 
-        $square = Square::show($this->getId());
-        unlink($_SERVER['DOCUMENT_ROOT'] . "/Storage/img/{$square->getBackground()}");
+        unlink($_SERVER['DOCUMENT_ROOT'] . "/Storage/img/{$this->getBackground()}");
         
         $params = [':id' => $this->getId()];
 
@@ -242,12 +171,12 @@ class Square
         while ($registro = $comando->fetch()) {
             $measure = Measure::show($registro['id_measure']);
             $square = new Square(
-                                $registro['id'], 
-                                $registro['height'], 
-                                $registro['backgroundType'],
-                                $registro['background'], 
-                                $registro['color'], 
-                                $measure);
+                        $registro['id'], 
+                        $registro['height'], 
+                        $registro['backgroundType'],
+                        $registro['background'], 
+                        $registro['color'], 
+                        $measure);
 
             array_push($squares, $square);
         }

@@ -24,14 +24,14 @@
                     <div class="p-6 text-gray-900 dark:text-gray-100">
 
                         <?php include('../components/message.php') ?>
-                        
-                        <form method='post' action="square.php" enctype="multipart/form-data">
-                            <input type="hidden" name="id" id="id" value="<?= $id ? $quadrado->getId() : 0 ?>" readonly>
 
-                            <div class="collapse <?= $quadrado ? 'collapse-open' : null ?> collapse-arrow bg-base-200 border border-primary mb-4">
-                                <input type="checkbox" />
-                                <div class="collapse-title text-xl font-medium">Novo quadrado</div>
-                                <div class="collapse-content">
+                        <div class="collapse <?= $square ? 'collapse-open' : null ?> collapse-arrow bg-base-200 border border-primary mb-4">
+                            <input type="checkbox" />
+                            <div class="collapse-title text-xl font-medium">Novo quadrado</div>
+                            <div class="collapse-content">
+                                <form method='post' action="square.php" enctype="multipart/form-data">
+                                    <input type="hidden" name="id" id="id" value="<?= $id ? $square->getId() : 0 ?>" readonly>
+
                                     <div class="grid grid-cols-11 gap-x-4">
 
                                         <div class="col-span-12 flex w-full flex-col">
@@ -42,7 +42,7 @@
                                             <div class="label">
                                                 <span class="label-text">Qual é a altura?</span>
                                             </div>
-                                            <input type="number" name="height" id="height" value="<?= $id ? $quadrado->getHeight() : 0 ?>" class="input input-bordered input-sm w-full max-w-xs" />
+                                            <input type="number" name="height" id="height" value="<?= $id ? $square->getHeight() : 0 ?>" class="input input-bordered input-sm w-full max-w-xs" />
                                         </label>
 
                                         <label for="color" class="col-span-3 form-control w-full max-w-xs">
@@ -53,7 +53,7 @@
                                                 type="color" 
                                                 name="color" 
                                                 id="color" 
-                                                value="<?= $id ? $quadrado->getColor() : '' ?>" 
+                                                value="<?= $id ? $square->getColor() : '' ?>" 
                                                 class="input input-bordered input-sm w-full max-w-xs"
                                             />
                                         </label>
@@ -62,7 +62,7 @@
                                             <div class="label">
                                                 <span class="label-text">Fundo</span>
                                             </div>
-                                            <input type="checkbox" name="backgroundType" id="backgroundType" <?= isset($quadrado) && $quadrado->getBackgroundType() ? 'checked' : null ?> class="toggle toggle-lg" />
+                                            <input type="checkbox" name="backgroundType" id="backgroundType" <?= isset($square) && $square->getBackgroundType() ? 'checked' : null ?> class="toggle toggle-lg" />
                                         </label>
 
                                         <label for="background" class="col-span-3 form-control w-full max-w-xs">
@@ -82,7 +82,7 @@
                                                     ?>
                                                         <option 
                                                             value="<?= $measure->getId() ?>"
-                                                            <?= isset($quadrado) && $quadrado->getMeasure()->getId() == $measure->getId() ? 'selected' : null ?>
+                                                            <?= isset($square) && $square->getMeasure()->getId() == $measure->getId() ? 'selected' : null ?>
                                                         ><?= $measure->getMeasurement() ?></option>
                                                     <?php
                                                 }
@@ -93,8 +93,8 @@
                                     </div>
                                     <div class="flex gap-2 flex-row-reverse mt-4">
 
-                                        <button value="<?= isset($quadrado) ? 'alterar' : 'salvar' ?>" name="acao" class="btn btn-outline btn-primary">
-                                            <?= isset($quadrado) ? 'Alterar' : 'Salvar' ?>
+                                        <button value="<?= isset($square) ? 'alterar' : 'salvar' ?>" name="acao" class="btn btn-outline btn-primary">
+                                            <?= isset($square) ? 'Alterar' : 'Salvar' ?>
                                         </button>
                                         
                                         <?php if ($id) { ?>
@@ -107,19 +107,35 @@
                                         <?php } ?>
 
                                     </div>
+                                </form>
+                                <div class="flex gap-2 flex-row-reverse mt-4">
+
+                                    <button value="<?= isset($square) ? 'alterar' : 'salvar' ?>" name="acao" class="btn btn-outline btn-primary">
+                                        <?= isset($square) ? 'Alterar' : 'Salvar' ?>
+                                    </button>
+                                    
+                                    <?php if ($id) { ?>
+                                        <button value="excluir" name="acao" class="btn btn-outline btn-error">Excluir</button>
+                                        <a href="index.php" class="btn btn-outline">
+                                            Voltar
+                                        </a>
+                                    <?php } else { ?>
+                                        <button type="reset" class="btn btn-outline">Apagar</button>
+                                    <?php } ?>
+
                                 </div>
                             </div>
+                        </div>
 
-                        </form>
 
-                        <?php if (isset($quadrado)) { ?>
-                            <?php if ($quadrado->getBackgroundType()) { ?>
+                        <?php if (isset($square)) { ?>
+                            <?php if ($square->getBackgroundType()) { ?>
                                 <div class="flex w-full justify-center">
-                                    <?= $quadrado->draw() ?>
+                                    <?= $square->draw() ?>
                                 </div>
                             <?php } else {?>
                                 <div class="flex w-full justify-center">
-                                    <?= $quadrado->draw() ?>
+                                    <?= $square->draw() ?>
                                 </div>
                             <?php } ?>
                         <?php }  ?>
@@ -153,7 +169,7 @@
 
                             <div class="overflow-x-auto my-5 border border-neutral rounded-2xl">
                                 <?php
-                                    if (empty($quadrados)) {
+                                    if (empty($squares)) {
                                     ?>
                                         <h1 class="text-xl text-center my-5">Nenhum quadrado adicionado</h1>
                                     <?php
@@ -168,12 +184,12 @@
                                             </tr>
 
                                             <?php
-                                                foreach ($quadrados as $quadrado) { ?>
+                                                foreach ($squares as $square) { ?>
                                                     <tr>
-                                                        <td><a href='index.php?id=<?= $quadrado->getId() ?>' class="link"><?= $quadrado->getId() ?></a></td>
-                                                        <td><?= $quadrado->getBackgroundType() ?  $quadrado->getBackground() : $quadrado->getColor() ?></td>
-                                                        <td><?= $quadrado->getHeight() ?></td>
-                                                        <td><?= $quadrado->getMeasure()->getMeasurement() ?></a></td>
+                                                        <td><a href='index.php?id=<?= $square->getId() ?>' class="link"><?= $square->getId() ?></a></td>
+                                                        <td><?= $square->getBackgroundType() ?  $square->getBackground() : $square->getColor() ?></td>
+                                                        <td><?= $square->getHeight() ?></td>
+                                                        <td><?= $square->getMeasure()->getMeasurement() ?></a></td>
                                                     </tr>
                                             <?php } ?>
                                         </table>

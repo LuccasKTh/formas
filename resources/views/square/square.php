@@ -8,7 +8,7 @@ $msg = isset($_GET['msg']) ? $_GET['msg'] : 0;
 $type = isset($_GET['type']) ? $_GET['type'] : 0;
 
 if ($id > 0) {
-    $quadrado = Square::show($id);
+    $square = Square::show($id);
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -28,7 +28,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     try {
         $measure = Measure::show($idMeasurement);
-        $quadrado = new Square($id, $height, $backgroundType, $background, $color, $measure);
+        if ($acao != 'excluir') {
+            $square = new Square($id, $height, $backgroundType, $background, $color, $measure);
+        }
     } catch (Exception $e) {
         header('Location: index.php?msg=ERROR:' . $e->getMessage());
     }
@@ -37,17 +39,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     switch ($acao) {
         case 'salvar':
             $msg = 'Adicionado com sucesso';
-            $resultado = $quadrado->store();
+            $resultado = $square->store();
             break;
 
         case 'alterar':
             $msg = 'Alterado com sucesso';
-            $resultado = $quadrado->update();
+            $resultado = $square->update();
             break;
 
         case 'excluir':
             $msg = 'Excluído com sucesso';
-            $resultado = $quadrado->destroy();
+            $resultado = $square->destroy();
             break;
     }
 
@@ -60,6 +62,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 } else if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $busca = isset($_GET['busca']) ? $_GET['busca'] : 0;
     $tipo = isset($_GET['tipo']) ? $_GET['tipo'] : 0;
-    $quadrados = Square::index($tipo, $busca);
+    $squares = Square::index($tipo, $busca);
     $measures = Measure::index(0, '');
 }
