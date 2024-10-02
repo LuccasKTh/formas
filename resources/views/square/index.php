@@ -1,5 +1,5 @@
 <?php
-    include_once('square.php');
+    include_once 'square.php';
 ?>
 
 <!DOCTYPE html>
@@ -108,22 +108,6 @@
 
                                     </div>
                                 </form>
-                                <div class="flex gap-2 flex-row-reverse mt-4">
-
-                                    <button value="<?= isset($square) ? 'alterar' : 'salvar' ?>" name="acao" class="btn btn-outline btn-primary">
-                                        <?= isset($square) ? 'Alterar' : 'Salvar' ?>
-                                    </button>
-                                    
-                                    <?php if ($id) { ?>
-                                        <button value="excluir" name="acao" class="btn btn-outline btn-error">Excluir</button>
-                                        <a href="index.php" class="btn btn-outline">
-                                            Voltar
-                                        </a>
-                                    <?php } else { ?>
-                                        <button type="reset" class="btn btn-outline">Apagar</button>
-                                    <?php } ?>
-
-                                </div>
                             </div>
                         </div>
 

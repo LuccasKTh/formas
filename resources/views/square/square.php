@@ -1,7 +1,7 @@
 <?php
 
-require_once("../../../Class/Square.class.php");
-require_once("../../../Class/Database.class.php");
+require_once "../../../Class/Square.class.php";
+require_once "../../../Class/Database.class.php";
 
 $id = isset($_GET['id']) ? $_GET['id'] : 0;
 $msg = isset($_GET['msg']) ? $_GET['msg'] : 0;

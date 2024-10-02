@@ -1,7 +1,7 @@
 <?php
 
-require_once("../../../Class/Measure.class.php");
-require_once("../Class/Shape.class.php");
+require_once "../../../Class/Measure.class.php";
+require_once "Shape.cl[ass.php";
 
 class Square extends Shape
 {
