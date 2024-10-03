@@ -27,10 +27,9 @@ class Circle extends Shape
     {
         $sql = 'INSERT INTO circle (color, image, id_measure, radius) VALUES (:color, :image, :id_measure, :radius)';
 
-        $params = [
-            ':color' => $this->getColor(),
-            ':image' => $this->getImage(),
-            ':id_measure' => $this->getMeasure()->getId(),
+        $params = parent::controlImage(Circle::class);
+
+        $params += [
             ':radius' => $this->getRadius()
         ];
 
@@ -39,13 +38,12 @@ class Circle extends Shape
 
     public function update()
     {
-        $sql = 'UPDATE circle SET color = :color, image = :image, id_measure = :id_measure, radius = :radius, WHERE id = :id';
+        $sql = 'UPDATE circle SET color = :color, image = :image, id_measure = :id_measure, radius = :radius WHERE id = :id';
     
-        $params = [
+        $params = parent::controlImage(Circle::class);
+
+        $params += [
             ':id' => $this->getId(),
-            ':color' => $this->getColor(),
-            ':background' => $this->getImage(),
-            ':id_measure' => $this->getMeasure()->getId(),
             ':radius' => $this->getRadius()
         ];
 
@@ -56,7 +54,7 @@ class Circle extends Shape
     {
         $sql = 'DELETE FROM circle WHERE id = :id';
 
-        unlink($_SERVER['DOCUMENT_ROOT'] . "/Storage/img/{$this->getImage()}");
+        unlink("../../../Storage/img/{$this->getImage()}");
         
         $params = [':id' => $this->getId()];
 
@@ -140,14 +138,19 @@ class Circle extends Shape
     public function draw()
     {
         $this->getColor()
-            ? $type = "background-color: ".$this->getColor()."'>"
-            : $type = "background-image: url(../../../Storage/img/".$this->getImage()."); background-size: 100% 100%;";
+            ? $type = "background-color: ".$this->getColor()
+            : $type = "background-image: url(../../../Storage/img/".$this->getImage()."); background-size: 100% 100%";
 
-        return "<div style='
-                    width: ".($this->getRadius()*2).$this->getMeasure()->getMeasurement()."; 
-                    height: ".($this->getRadius()*2).$this->getMeasure()->getMeasurement().";
-                    border-radius: 50%;
-                    $type
-                </div>";    
+        return "<div style='width: ".($this->getRadius()*2).$this->getMeasure()->getMeasurement()."; height: ".($this->getRadius()*2).$this->getMeasure()->getMeasurement()."; border-radius: 50%; $type;'></div>";    
+    }
+
+    public function calculateArea()
+    {
+        return pi() * ($this->getRadius() ** 2);
+    }
+
+    public function calculatePerimeter()
+    {
+        return 2 * pi() * $this->getRadius();
     }
 }

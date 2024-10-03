@@ -100,15 +100,27 @@
                                         <?php } ?>
 
                                     </div>
+
+                                    <?php if (isset($square)) { ?>
+                                    <div class="col-span-12 flex w-full flex-col">
+                                        <div class="divider divider-neutral">informações</div>
+                                    </div>
+                                    <div class="flex gap-2 mt-4 justify-around">
+
+                                        <p>Área: <?= "{$square->calculateArea()}{$square->getMeasure()->getMeasurement()}²" ?></p>
+                                        <p>Perímetro: <?= "{$square->calculatePerimeter()}{$square->getMeasure()->getMeasurement()}" ?></p>
+                                        
+                                    </div>
+                                    <div class="flex w-full justify-center">
+                                        <?= $square->draw() ?>
+                                    </div>
+                                    <?php } ?>
+
                                 </form>
                             </div>
                         </div>
 
-                        <?php if (isset($square)) { ?>
-                            <div class="flex w-full justify-center">
-                                <?= $square->draw() ?>
-                            </div>
-                        <?php }  ?>
+                        <?php if (!isset($square)) { ?>
 
                         <div class="flex w-full flex-col">
                             <div class="divider">Lista de quadrados</div>
@@ -138,36 +150,31 @@
                             </form>
 
                             <div class="overflow-x-auto my-5 border border-neutral rounded-2xl">
-                                <?php
-                                    if (empty($squares)) {
-                                    ?>
-                                        <h1 class="text-xl text-center my-5">Nenhum quadrado adicionado</h1>
-                                    <?php
-                                    } else {
-                                    ?>
-                                        <table class="table table-zebra">
-                                            <tr>
-                                                <th>#</th>
-                                                <th>Fundo</th>
-                                                <th>Altura</th>
-                                                <th>Unidade de Medida</th>
-                                            </tr>
+                                <?php if (empty($squares)) { ?>
+                                <h1 class="text-xl text-center my-5">Nenhum quadrado adicionado</h1>
+                                <?php } else { ?>
+                                <table class="table table-zebra">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Fundo</th>
+                                        <th>Altura</th>
+                                        <th>Unidade de Medida</th>
+                                    </tr>
 
-                                            <?php
-                                                foreach ($squares as $square) { ?>
-                                                    <tr>
-                                                        <td><a href='index.php?id=<?= $square->getId() ?>' class="link"><?= $square->getId() ?></a></td>
-                                                        <td><?= $square->getColor() ?   $square->getColor() : $square->getImage() ?></td>
-                                                        <td><?= $square->getHeight() ?></td>
-                                                        <td><?= $square->getMeasure()->getMeasurement() ?></a></td>
-                                                    </tr>
-                                            <?php } ?>
-                                        </table>
-                                <?php
-                                    }
-                                ?>
+                                    <?php
+                                        foreach ($squares as $square) { ?>
+                                            <tr>
+                                                <td><a href='index.php?id=<?= $square->getId() ?>' class="link"><?= $square->getId() ?></a></td>
+                                                <td><?= $square->getColor() ?   $square->getColor() : $square->getImage() ?></td>
+                                                <td><?= $square->getHeight() ?></td>
+                                                <td><?= $square->getMeasure()->getMeasurement() ?></a></td>
+                                            </tr>
+                                    <?php } ?>
+                                </table>
+                                <?php } ?>
                             </div>
                         </div>
+                        <?php } ?>
                     </div>
                 </div>
             </div>

@@ -4,8 +4,6 @@ require_once ('../../../config/config.inc.php');
 
 class Database
 {
-    static public $lastId;
-
     public static function getInstance()
     {
         try {

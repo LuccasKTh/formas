@@ -8,7 +8,7 @@ $msg = isset($_GET['msg']) ? $_GET['msg'] : 0;
 $type = isset($_GET['type']) ? $_GET['type'] : 0;
 
 if ($id > 0) {
-    $square = Circle::show($id);
+    $circle = Circle::show($id);
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -22,9 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     try {
         $measure = Measure::show($idMeasurement);
-        if ($acao != 'excluir') {
-            $circle = new Circle($id, $color, $image, $measure, $radius);
-        }
+        $circle = new Circle($id, $color, $image, $measure, $radius);
     } catch (Exception $e) {
         header('Location: index.php?msg=ERROR:' . $e->getMessage());
     }
@@ -56,6 +54,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 } else if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $busca = isset($_GET['busca']) ? $_GET['busca'] : 0;
     $tipo = isset($_GET['tipo']) ? $_GET['tipo'] : 0;
-    $squares = Circle::index($tipo, $busca);
+    $circles = Circle::index($tipo, $busca);
     $measures = Measure::index(0, '');
 }

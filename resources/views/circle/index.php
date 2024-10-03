@@ -25,12 +25,12 @@
 
                         <?php include('../components/message.php') ?>
 
-                        <div class="collapse <?= $square ? 'collapse-open' : null ?> collapse-arrow bg-base-200 border border-primary mb-4">
+                        <div class="collapse <?= $circle ? 'collapse-open' : null ?> collapse-arrow bg-base-200 border border-primary mb-4">
                             <input type="checkbox" />
                             <div class="collapse-title text-xl font-medium">Novo circulo</div>
                             <div class="collapse-content">
                                 <form method='post' action="circle.php" enctype="multipart/form-data">
-                                    <input type="hidden" name="id" id="id" value="<?= $id ? $square->getId() : 0 ?>" readonly>
+                                    <input type="hidden" name="id" id="id" value="<?= $id ? $circle->getId() : 0 ?>" readonly>
 
                                     <div class="grid grid-cols-12 gap-x-4">
 
@@ -42,7 +42,7 @@
                                             <div class="label">
                                                 <span class="label-text">Qual o raio?</span>
                                             </div>
-                                            <input type="number" name="radius" id="radius" value="<?= $id ? $square->getRadius() : 0 ?>" class="input input-bordered input-sm w-full" />
+                                            <input type="number" name="radius" id="radius" value="<?= $id ? $circle->getRadius() : 0 ?>" class="input input-bordered input-sm w-full" />
                                         </label>
 
                                         <label for="color" class="col-span-4 form-control w-full">
@@ -53,7 +53,7 @@
                                                 type="color" 
                                                 name="color" 
                                                 id="color" 
-                                                value="<?= $id ? $square->getColor() : '' ?>" 
+                                                value="<?= $id ? $circle->getColor() : '' ?>" 
                                                 class="input input-bordered input-sm w-full"
                                             />
                                         </label>
@@ -75,7 +75,7 @@
                                                     ?>
                                                         <option 
                                                             value="<?= $measure->getId() ?>"
-                                                            <?= isset($square) && $square->getMeasure()->getId() == $measure->getId() ? 'selected' : null ?>
+                                                            <?= isset($circle) && $circle->getMeasure()->getId() == $measure->getId() ? 'selected' : null ?>
                                                         ><?= $measure->getMeasurement() ?></option>
                                                     <?php
                                                 }
@@ -86,8 +86,8 @@
                                     </div>
                                     <div class="flex gap-2 flex-row-reverse mt-4">
 
-                                        <button value="<?= isset($square) ? 'alterar' : 'salvar' ?>" name="acao" class="btn btn-outline btn-primary">
-                                            <?= isset($square) ? 'Alterar' : 'Salvar' ?>
+                                        <button value="<?= isset($circle) ? 'alterar' : 'salvar' ?>" name="acao" class="btn btn-outline btn-primary">
+                                            <?= isset($circle) ? 'Alterar' : 'Salvar' ?>
                                         </button>
                                         
                                         <?php if ($id) { ?>
@@ -100,23 +100,27 @@
                                         <?php } ?>
 
                                     </div>
+
+                                    <?php if (isset($circle)) { ?>
+                                    <div class="col-span-12 flex w-full flex-col">
+                                        <div class="divider divider-neutral">informações</div>
+                                    </div>
+                                    <div class="flex gap-2 mt-4 justify-around">
+
+                                        <p>Área: <?= "{$circle->calculateArea()}{$circle->getMeasure()->getMeasurement()}²" ?></p>
+                                        <p>Perímetro: <?= "{$circle->calculatePerimeter()}{$circle->getMeasure()->getMeasurement()}" ?></p>
+                                        
+                                    </div>
+                                    <div class="flex w-full justify-center">
+                                        <?= $circle->draw() ?>
+                                    </div>
+                                    <?php } ?>
                                 </form>
                             </div>
                         </div>
 
 
-                        <?php if (isset($square)) { ?>
-                            <?php if ($square->getBackgroundType()) { ?>
-                                <div class="flex w-full justify-center">
-                                    <?= $square->draw() ?>
-                                </div>
-                            <?php } else {?>
-                                <div class="flex w-full justify-center">
-                                    <?= $square->draw() ?>
-                                </div>
-                            <?php } ?>
-                        <?php }  ?>
-
+                        <?php if (!isset($circle)) { ?>
                         <div class="flex w-full flex-col">
                             <div class="divider">Lista de quadrados</div>
             
@@ -145,36 +149,30 @@
                             </form>
 
                             <div class="overflow-x-auto my-5 border border-neutral rounded-2xl">
-                                <?php
-                                    if (empty($squares)) {
-                                    ?>
-                                        <h1 class="text-xl text-center my-5">Nenhum quadrado adicionado</h1>
-                                    <?php
-                                    } else {
-                                    ?>
-                                        <table class="table table-zebra">
-                                            <tr>
-                                                <th>#</th>
-                                                <th>Cor</th>
-                                                <th>Raio</th>
-                                                <th>Unidade de Medida</th>
-                                            </tr>
+                                <?php if (empty($circles)) { ?>
+                                <h1 class="text-xl text-center my-5">Nenhum quadrado adicionado</h1>
+                                <?php } else { ?>
+                                <table class="table table-zebra">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Cor</th>
+                                        <th>Raio</th>
+                                        <th>Unidade de Medida</th>
+                                    </tr>
 
-                                            <?php
-                                                foreach ($squares as $square) { ?>
-                                                    <tr>
-                                                        <td><a href='index.php?id=<?= $square->getId() ?>' class="link"><?= $square->getId() ?></a></td>
-                                                        <td><?= $square->getBackgroundType() ?  $square->getBackground() : $square->getColor() ?></td>
-                                                        <td><?= $square->getRadius() ?></td>
-                                                        <td><?= $square->getMeasure()->getMeasurement() ?></a></td>
-                                                    </tr>
-                                            <?php } ?>
-                                        </table>
-                                <?php
-                                    }
-                                ?>
+                                    <?php foreach ($circles as $circle) { ?>
+                                        <tr>
+                                            <td><a href='index.php?id=<?= $circle->getId() ?>' class="link"><?= $circle->getId() ?></a></td>
+                                            <td><?= $circle->getImage() ? $circle->getImage() : $circle->getColor() ?></td>
+                                            <td><?= $circle->getRadius() ?></td>
+                                            <td><?= $circle->getMeasure()->getMeasurement() ?></a></td>
+                                        </tr>
+                                    <?php } ?>
+                                </table>
+                                <?php } ?>
                             </div>
                         </div>
+                        <?php } ?>
                     </div>
                 </div>
             </div>

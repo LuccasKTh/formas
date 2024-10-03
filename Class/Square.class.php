@@ -144,4 +144,14 @@ class Square extends Shape
 
         return "<div style='width: ".$this->getHeight().$this->getMeasure()->getMeasurement()."; height: ".$this->getHeight().$this->getMeasure()->getMeasurement()."; $type;'></div>";    
     }
+
+    public function calculateArea() 
+    {
+        return $this->getHeight() * $this->getHeight();
+    }
+
+    public function calculatePerimeter()
+    {
+        return $this->getHeight() * 4;
+    }
 }

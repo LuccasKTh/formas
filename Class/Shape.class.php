@@ -73,7 +73,9 @@ abstract class Shape
         if ($this->getId() != 0) {
             $square = $class::show($this->getId());
             $imageName = $square->getImage();
-            unlink('../../../Storage/img/'.$imageName);
+            if ($imageName) {
+                unlink("../../../Storage/img/$imageName");
+            }
         }
 
         $color = 0;
@@ -87,20 +89,34 @@ abstract class Shape
                 mkdir('../../../Storage/img/', 0777, true);
             }
 
-            $path = '../../../Storage/img/'.$imageName;
+            $path = "../../../Storage/img/$imageName";
 
             move_uploaded_file($image['tmp_name'], $path);
         } else {
             $color = $this->getColor();
-            unlink('../../../Storage/img/'.$imageName);
             $imageName = 0;
         }
 
-        return[
+        return [
             ':color' => $color,
             ':image' => $imageName,
             ':id_measure' => $this->getMeasure()->getId()
         ];
+    }
+
+    public function draw() 
+    {
+        //
+    }
+
+    public function calculateArea()
+    {
+        //
+    }
+
+    public function calculatePerimeter()
+    {
+        //
     }
 
     // public function draw()
