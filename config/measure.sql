@@ -1,3 +1,5 @@
+create schema formas;
+
 use formas;
 
 create table measure (
@@ -7,11 +9,19 @@ create table measure (
 
 create table square (
     id int primary key auto_increment,
-    height int not null,
-    backgroundType int not null,
-    background varchar(45),
     color varchar(45),
+    image varchar(45),
     id_measure int not null,
+    height int not null,
+    foreign key (id_measure) references measure(id)
+);
+
+create table circle (
+    id int primary key auto_increment,
+    color varchar(45),
+    image varchar(45),
+    id_measure int not null,
+    radius float not null,
     foreign key (id_measure) references measure(id)
 );
 

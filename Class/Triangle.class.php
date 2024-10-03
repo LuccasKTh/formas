@@ -1,14 +1,14 @@
 <?php 
 
-class Triangle extends Shape {
-
+abstract class Triangle extends Shape 
+{
     private int $leftSide;
     private int $rightSide;
     private int $bottomSide;
 
-    public function __construct($id, $background, $backgroundType, $color, Measure $measure, $leftSide, $rightSide, $bottomSide)
+    public function __construct($id, $color, $image, Measure $measure, $leftSide, $rightSide, $bottomSide)
     {   
-        parent::__construct($id, $backgroundType, $background, $color, $measure);
+        parent::__construct($id, $color, $image, $measure);
         $this->setleftSide($leftSide);
         $this->setRightSide($rightSide);
         $this->setBottomSide($bottomSide);
@@ -43,6 +43,4 @@ class Triangle extends Shape {
     {
         return $this->bottomSide;    
     }
-
-
 }

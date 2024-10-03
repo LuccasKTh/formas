@@ -1,5 +1,5 @@
 <?php
-    include_once 'square.php';
+    include_once 'circle.php';
 ?>
 
 <!DOCTYPE html>
@@ -27,22 +27,22 @@
 
                         <div class="collapse <?= $square ? 'collapse-open' : null ?> collapse-arrow bg-base-200 border border-primary mb-4">
                             <input type="checkbox" />
-                            <div class="collapse-title text-xl font-medium">Novo quadrado</div>
+                            <div class="collapse-title text-xl font-medium">Novo circulo</div>
                             <div class="collapse-content">
-                                <form method='post' action="square.php" enctype="multipart/form-data">
+                                <form method='post' action="circle.php" enctype="multipart/form-data">
                                     <input type="hidden" name="id" id="id" value="<?= $id ? $square->getId() : 0 ?>" readonly>
 
                                     <div class="grid grid-cols-12 gap-x-4">
 
                                         <div class="col-span-12 flex w-full flex-col">
-                                            <div class="divider divider-neutral">quadrado</div>
+                                            <div class="divider divider-neutral">circulo</div>
                                         </div>
 
-                                        <label for="height" class="col-span-2 form-control w-full">
+                                        <label for="radius" class="col-span-2 form-control w-full">
                                             <div class="label">
-                                                <span class="label-text">Qual é a altura?</span>
+                                                <span class="label-text">Qual o raio?</span>
                                             </div>
-                                            <input type="number" name="height" id="height" value="<?= $id ? $square->getHeight() : 0 ?>" class="input input-bordered input-sm w-full" />
+                                            <input type="number" name="radius" id="radius" value="<?= $id ? $square->getRadius() : 0 ?>" class="input input-bordered input-sm w-full" />
                                         </label>
 
                                         <label for="color" class="col-span-4 form-control w-full">
@@ -57,7 +57,7 @@
                                                 class="input input-bordered input-sm w-full"
                                             />
                                         </label>
-
+                                       
                                         <label for="image" class="col-span-4 form-control w-full">
                                             <div class="label">
                                                 <span class="label-text">Qual é a imagem?</span>
@@ -104,10 +104,17 @@
                             </div>
                         </div>
 
+
                         <?php if (isset($square)) { ?>
-                            <div class="flex w-full justify-center">
-                                <?= $square->draw() ?>
-                            </div>
+                            <?php if ($square->getBackgroundType()) { ?>
+                                <div class="flex w-full justify-center">
+                                    <?= $square->draw() ?>
+                                </div>
+                            <?php } else {?>
+                                <div class="flex w-full justify-center">
+                                    <?= $square->draw() ?>
+                                </div>
+                            <?php } ?>
                         <?php }  ?>
 
                         <div class="flex w-full flex-col">
@@ -148,8 +155,8 @@
                                         <table class="table table-zebra">
                                             <tr>
                                                 <th>#</th>
-                                                <th>Fundo</th>
-                                                <th>Altura</th>
+                                                <th>Cor</th>
+                                                <th>Raio</th>
                                                 <th>Unidade de Medida</th>
                                             </tr>
 
@@ -157,8 +164,8 @@
                                                 foreach ($squares as $square) { ?>
                                                     <tr>
                                                         <td><a href='index.php?id=<?= $square->getId() ?>' class="link"><?= $square->getId() ?></a></td>
-                                                        <td><?= $square->getColor() ?   $square->getColor() : $square->getImage() ?></td>
-                                                        <td><?= $square->getHeight() ?></td>
+                                                        <td><?= $square->getBackgroundType() ?  $square->getBackground() : $square->getColor() ?></td>
+                                                        <td><?= $square->getRadius() ?></td>
                                                         <td><?= $square->getMeasure()->getMeasurement() ?></a></td>
                                                     </tr>
                                             <?php } ?>

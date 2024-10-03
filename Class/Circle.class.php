@@ -3,49 +3,50 @@
 require_once "Measure.class.php";
 require_once "Shape.class.php";
 
-class Square extends Shape
+class Circle extends Shape
 {
-    private int $height;
+    private float $radius;
 
-    public function __construct($id, $color, $image, Measure $measure, $height) {
+    public function __construct($id, $color, $image, Measure $measure, $radius)
+    {
         parent::__construct($id, $color, $image, $measure);
-        $this->setHeight($height);
+        $this->setRadius($radius);
     }
 
-    public function setHeight($newHeight)
+    public function setRadius($newRadius)
     {
-        if ($newHeight < 0) {
-            throw new Exception("Error: Altura inválida!");
-        } else {
-            $this->height = $newHeight;
-        }
+        $this->radius = $newRadius;
     }
-    
-    public function getHeight()
+
+    public function getRadius()
     {
-        return $this->height;    
+        return $this->radius;
     }
 
     public function store()
     {
-        $sql = 'INSERT INTO square (color, image, id_measure, height) VALUES (:color, :image, :id_measure, :height)';
+        $sql = 'INSERT INTO circle (color, image, id_measure, radius) VALUES (:color, :image, :id_measure, :radius)';
 
-        $params = parent::controlImage(Square::class);
-
-        $params += [':height' => $this->getHeight()];
+        $params = [
+            ':color' => $this->getColor(),
+            ':image' => $this->getImage(),
+            ':id_measure' => $this->getMeasure()->getId(),
+            ':radius' => $this->getRadius()
+        ];
 
         return Database::executar($sql, $params);
     }
 
     public function update()
     {
-        $sql = 'UPDATE square SET color = :color, image = :image, id_measure = :id_measure, height = :height WHERE id = :id';
-
-        $params = parent::controlImage(Square::class);
-
-        $params += [
+        $sql = 'UPDATE circle SET color = :color, image = :image, id_measure = :id_measure, radius = :radius, WHERE id = :id';
+    
+        $params = [
             ':id' => $this->getId(),
-            ':height' => $this->getHeight()
+            ':color' => $this->getColor(),
+            ':background' => $this->getImage(),
+            ':id_measure' => $this->getMeasure()->getId(),
+            ':radius' => $this->getRadius()
         ];
 
         return Database::executar($sql, $params);
@@ -53,9 +54,9 @@ class Square extends Shape
 
     public function destroy()
     {
-        $sql = 'DELETE FROM square WHERE id = :id';
+        $sql = 'DELETE FROM circle WHERE id = :id';
 
-        unlink("../../../Storage/img/{$this->getImage()}");
+        unlink($_SERVER['DOCUMENT_ROOT'] . "/Storage/img/{$this->getImage()}");
         
         $params = [':id' => $this->getId()];
 
@@ -64,7 +65,7 @@ class Square extends Shape
 
     public static function index($tipo, $busca)
     {
-        $sql = "SELECT * FROM square";
+        $sql = "SELECT * FROM circle";
         if ($tipo > 0)
             switch ($tipo) {
                 case 1:
@@ -75,11 +76,11 @@ class Square extends Shape
                     $busca = "%{$busca}%";
                     break;
                 case 3:
-                    $sql .= " WHERE height LIKE :busca";
+                    $sql .= " WHERE radius LIKE :busca";
                     $busca = "%{$busca}%";
                     break;
                 case 4:
-                    $sql .= " INNER JOIN measure ON (square.id_measure = measure.id) WHERE measurement LIKE :busca";
+                    $sql .= " INNER JOIN measure ON (circle.id_measure = measure.id) WHERE measurement LIKE :busca";
                     $busca = "%{$busca}%";
                     break;
             }
@@ -90,28 +91,28 @@ class Square extends Shape
 
         $comando = Database::executar($sql, $params);
 
-        $squares = [];
+        $circles = [];
         while ($registro = $comando->fetch()) {
             $measure = Measure::show($registro['id_measure']);
-            $square = new Square(
+            $circle = new Circle(
                         $registro['id'], 
                         $registro['color'], 
                         $registro['image'], 
                         $measure,
-                        $registro['height']
+                        $registro['radius']
                     );
 
-            array_push($squares, $square);
+            array_push($circles, $circle);
         }
 
-        return $squares;
+        return $circles;
     }
 
     public static function show($id)
     {
         $conexao = Database::getInstance();
 
-        $sql = "SELECT * FROM square WHERE id = :id";
+        $sql = "SELECT * FROM circle WHERE id = :id";
 
         $comando = $conexao->prepare($sql);
 
@@ -125,23 +126,28 @@ class Square extends Shape
 
         $measure = Measure::show($registro['id_measure']);
 
-        $square = new Square(
+        $circle = new Circle(
                         $registro['id'], 
                         $registro['color'], 
                         $registro['image'], 
                         $measure,
-                        $registro['height']
+                        $registro['radius']
                     );
 
-        return $square;
+        return $circle;
     }
 
     public function draw()
     {
         $this->getColor()
-            ? $type = "background-color: ".$this->getColor()
-            : $type = "background-image: url(../../../Storage/img/".$this->getImage()."); background-size: 100% 100%";
+            ? $type = "background-color: ".$this->getColor()."'>"
+            : $type = "background-image: url(../../../Storage/img/".$this->getImage()."); background-size: 100% 100%;";
 
-        return "<div style='width: ".$this->getHeight().$this->getMeasure()->getMeasurement()."; height: ".$this->getHeight().$this->getMeasure()->getMeasurement()."; $type;'></div>";    
+        return "<div style='
+                    width: ".($this->getRadius()*2).$this->getMeasure()->getMeasurement()."; 
+                    height: ".($this->getRadius()*2).$this->getMeasure()->getMeasurement().";
+                    border-radius: 50%;
+                    $type
+                </div>";    
     }
 }

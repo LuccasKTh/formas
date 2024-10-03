@@ -3,22 +3,19 @@
 abstract class Shape
 {
     private int $id;
-    private int $backgroundType;
-    private string $color;
-    private $background;
+    private string|int $color;
+    private $image;
     private ?Measure $measure;
 
     public function __construct(
         $id,
-        $backgroundType, 
-        $background, 
         $color, 
+        $image, 
         Measure $measure
     ) {
         $this->setId($id);
-        $this->setBackgroundType($backgroundType);
-        $this->setBackground($background);
         $this->setColor($color);
+        $this->setImage($image);
         $this->setMeasure($measure);
     }
 
@@ -30,24 +27,15 @@ abstract class Shape
             $this->id = $newId;
         }
     }
-
-    public function setBackgroundType($newBackgroundType)
-    {
-        if ($newBackgroundType != true && $newBackgroundType != false) {
-            throw new Exception("Error: Tipo de background inválido");
-        } else {
-            $this->backgroundType = $newBackgroundType;
-        }
-    }
     
     public function setColor($newColor)
     {
         $this->color = $newColor;
     }
 
-    public function setBackground($newBackground)
+    public function setImage($newImage)
     {
-        $this->background = $newBackground;
+        $this->image = $newImage;
     }
 
     public function setMeasure($newMeasure)
@@ -63,15 +51,10 @@ abstract class Shape
     {
         return $this->id;    
     }
-
-    public function getBackgroundType()
-    {
-        return $this->backgroundType;
-    }
     
-    public function getBackground()
+    public function getImage()
     {
-        return $this->background; 
+        return $this->image; 
     }
 
     public function getColor()
@@ -83,4 +66,54 @@ abstract class Shape
     {
         return $this->measure;    
     }
+
+    public function controlImage($class)
+    {
+        $imageName = 0;
+        if ($this->getId() != 0) {
+            $square = $class::show($this->getId());
+            $imageName = $square->getImage();
+            unlink('../../../Storage/img/'.$imageName);
+        }
+
+        $color = 0;
+        if ($this->getImage()['size']) {
+            $image = $this->getImage();
+            $pathInfo = pathinfo($image['name']);
+            $extension = $pathInfo['extension'];
+            $imageName = $imageName ? $imageName : time().'.'.$extension;
+
+            if (!file_exists('../../../Storage/img/')) {
+                mkdir('../../../Storage/img/', 0777, true);
+            }
+
+            $path = '../../../Storage/img/'.$imageName;
+
+            move_uploaded_file($image['tmp_name'], $path);
+        } else {
+            $color = $this->getColor();
+            unlink('../../../Storage/img/'.$imageName);
+            $imageName = 0;
+        }
+
+        return[
+            ':color' => $color,
+            ':image' => $imageName,
+            ':id_measure' => $this->getMeasure()->getId()
+        ];
+    }
+
+    // public function draw()
+    // {
+    //     $this->getBackgroundType()
+    //         ? $type = "background-image: url(../../../Storage/img/".$this->getBackground().");
+    //                    background-size: 100% 100%;'>"
+    //         : $type = "background-color: ".$this->getColor()."'>";
+
+    //     return "<div style='
+    //                 width: ".$this->getHeight().$this->getMeasure()->getMeasurement()."; 
+    //                 height: ".$this->getHeight().$this->getMeasure()->getMeasurement().";
+    //                 $type
+    //             </div>";    
+    // }
 }
