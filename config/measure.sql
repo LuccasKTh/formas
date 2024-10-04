@@ -25,6 +25,17 @@ create table circle (
     foreign key (id_measure) references measure(id)
 );
 
+create table triangle (
+    id int primary key auto_increment,
+    color varchar(45),
+    image varchar(45),
+    id_measure int not null,
+    leftSide int not null,
+    rightSide int not null,
+    bottomSide int not null,
+    foreign key (id_measure) references measure(id)
+);
+
 insert into measure values(null, 'px');
 insert into measure values(null, 'cm');
 insert into measure values(null, 'mm');

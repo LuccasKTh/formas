@@ -1,5 +1,5 @@
 <?php
-    include_once 'circle.php';
+    include_once 'triangle.php';
 ?>
 
 <!DOCTYPE html>
@@ -25,27 +25,41 @@
 
                         <?php include('../components/message.php') ?>
 
-                        <div class="collapse <?= $circle ? 'collapse-open' : null ?> collapse-arrow bg-base-200 border border-primary mb-4">
+                        <div class="collapse <?= $triangle ? 'collapse-open' : null ?> collapse-arrow bg-base-200 border border-primary mb-4">
                             <input type="checkbox" />
-                            <div class="collapse-title text-xl font-medium">Novo circulo</div>
+                            <div class="collapse-title text-xl font-medium">Novo triângulo</div>
                             <div class="collapse-content">
-                                <form method='post' action="circle.php" enctype="multipart/form-data">
-                                    <input type="hidden" name="id" id="id" value="<?= $id ? $circle->getId() : 0 ?>" readonly>
+                                <form method='post' action="triangle.php" enctype="multipart/form-data">
+                                    <input type="hidden" name="id" id="id" value="<?= $id ? $triangle->getId() : 0 ?>" readonly>
 
                                     <div class="grid grid-cols-12 gap-x-4">
 
                                         <div class="col-span-12 flex w-full flex-col">
-                                            <div class="divider divider-neutral">circulo</div>
+                                            <div class="divider divider-neutral">triângulo</div>
                                         </div>
 
-                                        <label for="radius" class="col-span-2 form-control w-full">
+                                        <label for="leftSide" class="col-span-1 form-control w-full">
                                             <div class="label">
-                                                <span class="label-text">Qual o raio?</span>
+                                                <span class="label-text">Lado 1</span>
                                             </div>
-                                            <input type="number" name="radius" id="radius" value="<?= $id ? $circle->getRadius() : 0 ?>" class="input input-bordered input-sm w-full" />
+                                            <input type="number" name="leftSide" id="leftSide" value="<?= $id ? $triangle->getLeftSide() : 0 ?>" class="input input-bordered input-sm w-full" />
                                         </label>
 
-                                        <label for="color" class="col-span-4 form-control w-full">
+                                        <label for="rightSide" class="col-span-1 form-control w-full">
+                                            <div class="label">
+                                                <span class="label-text">Lado 2</span>
+                                            </div>
+                                            <input type="number" name="rightSide" id="rightSide" value="<?= $id ? $triangle->getRightSide() : 0 ?>" class="input input-bordered input-sm w-full" />
+                                        </label>
+
+                                        <label for="bottomSide" class="col-span-1 form-control w-full">
+                                            <div class="label">
+                                                <span class="label-text">Lado 3</span>
+                                            </div>
+                                            <input type="number" name="bottomSide" id="bottomSide" value="<?= $id ? $triangle->getBottomSide() : 0 ?>" class="input input-bordered input-sm w-full" />
+                                        </label>
+
+                                        <label for="color" class="col-span-3 form-control w-full">
                                             <div class="label">
                                                 <span class="label-text">Qual é a cor?</span>
                                             </div>
@@ -53,7 +67,7 @@
                                                 type="color" 
                                                 name="color" 
                                                 id="color" 
-                                                value="<?= $id ? $circle->getColor() : '' ?>" 
+                                                value="<?= $id ? $triangle->getColor() : '' ?>" 
                                                 class="input input-bordered input-sm w-full"
                                             />
                                         </label>
@@ -75,7 +89,7 @@
                                                     ?>
                                                         <option 
                                                             value="<?= $measure->getId() ?>"
-                                                            <?= isset($circle) && $circle->getMeasure()->getId() == $measure->getId() ? 'selected' : null ?>
+                                                            <?= isset($triangle) && $triangle->getMeasure()->getId() == $measure->getId() ? 'selected' : null ?>
                                                         ><?= $measure->getMeasurement() ?></option>
                                                     <?php
                                                 }
@@ -86,8 +100,8 @@
                                     </div>
                                     <div class="flex gap-2 flex-row-reverse mt-4">
 
-                                        <button value="<?= isset($circle) ? 'alterar' : 'salvar' ?>" name="acao" class="btn btn-outline btn-primary">
-                                            <?= isset($circle) ? 'Alterar' : 'Salvar' ?>
+                                        <button value="<?= isset($triangle) ? 'alterar' : 'salvar' ?>" name="acao" class="btn btn-outline btn-primary">
+                                            <?= isset($triangle) ? 'Alterar' : 'Salvar' ?>
                                         </button>
                                         
                                         <?php if ($id) { ?>
@@ -101,18 +115,18 @@
 
                                     </div>
 
-                                    <?php if (isset($circle)) { ?>
+                                    <?php if (isset($triangle)) { ?>
                                     <div class="col-span-12 flex w-full flex-col">
                                         <div class="divider divider-neutral">informações</div>
                                     </div>
                                     <div class="flex gap-2 mt-4 justify-around">
 
-                                        <p>Área: <?= "{$circle->calculateArea()}{$circle->getMeasure()->getMeasurement()}²" ?></p>
-                                        <p>Perímetro: <?= "{$circle->calculatePerimeter()}{$circle->getMeasure()->getMeasurement()}" ?></p>
+                                        <p>Área: <?= "{$triangle->calculateArea()}{$triangle->getMeasure()->getMeasurement()}²" ?></p>
+                                        <p>Perímetro: <?= "{$triangle->calculatePerimeter()}{$triangle->getMeasure()->getMeasurement()}" ?></p>
                                         
                                     </div>
                                     <div class="flex w-full justify-center">
-                                        <?= $circle->draw() ?>
+                                        <?= $triangle->draw() ?>
                                     </div>
                                     <?php } ?>
                                 </form>
@@ -120,9 +134,9 @@
                         </div>
 
 
-                        <?php if (!isset($circle)) { ?>
+                        <?php if (!isset($triangle)) { ?>
                         <div class="flex w-full flex-col">
-                            <div class="divider">Lista de círculos</div>
+                            <div class="divider">Lista de triângulos</div>
             
                             <!-- Formulário de pesquisa -->
                             <form action="" method="get">
@@ -139,7 +153,7 @@
                                         <option disabled selected>Tipo da busca</option>
                                         <option value="1">Id</option>
                                         <option value="2">Cor</option>
-                                        <option value="3">Raio</option>
+                                        <option value="3">Triângulo</option>
                                         <option value="4">Unidade de medida</option>
                                     </select>
 
@@ -149,23 +163,23 @@
                             </form>
 
                             <div class="overflow-x-auto my-5 border border-neutral rounded-2xl">
-                                <?php if (empty($circles)) { ?>
-                                <h1 class="text-xl text-center my-5">Nenhum quadrado adicionado</h1>
+                                <?php if (empty($triangles)) { ?>
+                                <h1 class="text-xl text-center my-5">Nenhum triângulo adicionado</h1>
                                 <?php } else { ?>
                                 <table class="table table-zebra">
                                     <tr>
                                         <th>#</th>
                                         <th>Cor</th>
-                                        <th>Raio</th>
+                                        <th>Triângulo</th>
                                         <th>Unidade de Medida</th>
                                     </tr>
 
-                                    <?php foreach ($circles as $circle) { ?>
+                                    <?php foreach ($triangles as $triangle) { ?>
                                         <tr>
-                                            <td><a href='index.php?id=<?= $circle->getId() ?>' class="link"><?= $circle->getId() ?></a></td>
-                                            <td><?= $circle->getImage() ? $circle->getImage() : $circle->getColor() ?></td>
-                                            <td><?= $circle->getRadius() ?></td>
-                                            <td><?= $circle->getMeasure()->getMeasurement() ?></a></td>
+                                            <td><a href='index.php?id=<?= $triangle->getId() ?>' class="link"><?= $triangle->getId() ?></a></td>
+                                            <td><?= $triangle->getImage() ? $triangle->getImage() : $triangle->getColor() ?></td>
+                                            <td><?= $triangle::verifyTriangleType($triangle->getLeftSide(), $triangle->getRightSide(), $triangle->getBottomSide()) ?></td>
+                                            <td><?= $triangle->getMeasure()->getMeasurement() ?></a></td>
                                         </tr>
                                     <?php } ?>
                                 </table>
