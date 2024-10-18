@@ -7,12 +7,12 @@ Sistema de controle de formas geométricas
 1. Baixar o repositório atual;  
 
 ```
-	git clone https://github.com/fabtec-ifc/fetec
+	git clone https://github.com/LuccasKTh/formas.git
 ```   
 2. Configurar o projeto para ser executado;
 ```
     cd formas
-   	npm i
+    npm i
     executar formas.sql
     renomear config.inc.exemple para config.inc.php
 ```
