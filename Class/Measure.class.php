@@ -2,10 +2,10 @@
 
 class Measure 
 {
-    private $id;
-    private $measurement;
+    private int $id;
+    private string $measurement;
 
-    public function __construct(int $id, string $measurement)
+    public function __construct($id, $measurement)
     {
         $this->setId($id);   
         $this->setMeasurement($measurement);   

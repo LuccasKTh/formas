@@ -10,7 +10,15 @@ if ($id > 0) {
     $square = Square::show($id);
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] == 'GET') 
+{
+    $busca = isset($_GET['busca']) ? $_GET['busca'] : 0;
+    $tipo = isset($_GET['tipo']) ? $_GET['tipo'] : 0;
+    $squares = Square::index($tipo, $busca);
+    $measures = Measure::index(0, '');
+}
+elseif ($_SERVER['REQUEST_METHOD'] == 'POST') 
+{
     $id = isset($_POST['id']) ? $_POST['id'] : 0;
     $color = isset($_POST['color']) ? $_POST['color'] : 0;
     $image = isset($_FILES['image']) ? $_FILES['image'] : 0;
@@ -50,9 +58,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         header("Location: index.php?type=alert-error&msg=Erro ao executar ação");
     }
 
-} else if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    $busca = isset($_GET['busca']) ? $_GET['busca'] : 0;
-    $tipo = isset($_GET['tipo']) ? $_GET['tipo'] : 0;
-    $squares = Square::index($tipo, $busca);
-    $measures = Measure::index(0, '');
 }

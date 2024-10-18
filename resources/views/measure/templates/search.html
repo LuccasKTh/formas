@@ -1,0 +1,21 @@
+<div class="divider">Lista De Unidades De Medida</div>
+<form action="" method="get">
+    <div class="flex gap-2">
+
+        <label for="busca" class="input input-bordered btn-sm flex items-center w-1/4 gap-2">
+            <input type="text" name="busca" id="busca" class="grow" placeholder="Buscar" />
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="h-4 w-4 opacity-70">
+                <path fill-rule="evenodd" d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z" clip-rule="evenodd" />
+            </svg>
+        </label>
+
+        <select name="tipo" id="tipo" class="select select-bordered select-sm max-w-xs">
+            <option disabled selected>Tipo da busca</option>
+            <option value="1">Id</option>
+            <option value="2">Unidade de medida</option>
+        </select>
+
+        <button type='submit' class="btn btn-sm btn-active btn-ghost">Buscar</button>
+
+    </div>
+</form>

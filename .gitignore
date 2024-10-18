@@ -1,2 +1,4 @@
-/Storage/
 /config/config.inc.php
+/Storage/
+/node_modules/
+/resources/css/output.css

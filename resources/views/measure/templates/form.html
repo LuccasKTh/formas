@@ -1,0 +1,39 @@
+<form method='POST' action="index.php">
+
+    <div class="collapse collapse-arrow bg-base-200 border border-primary mb-4">
+        <input type="checkbox" />
+
+        <div class="collapse-title text-xl font-medium">Nova unidade de medida</div>
+
+        <div class="collapse-content">
+            <div class="grid grid-cols-4 gap-x-4">
+
+                <div class="col-span-4 flex w-full flex-col">
+                    <div class="divider divider-neutral">unidade de medida</div>
+                </div>
+
+                <input type="hidden" name="id" id="id" value=":id" readonly>
+
+                <label for="color" class="form-control w-full max-w-xs">
+                    <div class="label">
+                        <span class="label-text">Qual é a unidade de medida?</span>
+                    </div>
+                    <input 
+                        type="measurement" 
+                        name="measurement" 
+                        id="measurement" 
+                        value=":measurement" 
+                        class="input input-bordered input-sm w-full max-w-xs" 
+                    />
+                </label>
+                
+            </div>  
+            <div class="flex gap-2 flex-row-reverse mt-4">
+                :save
+                :delete
+                :return
+                :clean
+            </div>
+        </div>
+    </div>
+</form>
