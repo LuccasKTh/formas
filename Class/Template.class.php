@@ -26,4 +26,5 @@ class Template {
     {
         return dirname($this->dir);
     }
+
 }

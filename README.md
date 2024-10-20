@@ -7,7 +7,7 @@ Sistema de controle de formas geométricas
 1. Baixar o repositório atual;  
 
 ```
-	git clone https://github.com/LuccasKTh/formas.git
+    git clone https://github.com/LuccasKTh/formas.git
 ```   
 2. Configurar o projeto para ser executado;
 ```

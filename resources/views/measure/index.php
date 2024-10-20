@@ -3,7 +3,7 @@ require_once "../../../Class/autoload.php";
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $id = isset($_GET['id']) ? $_GET['id'] : 0;
-    $msg = isset($_GET['msg']) ? $_GET['msg'] : 0;
+    $message = isset($_GET['msg']) ? $_GET['msg'] : 0;
     $type = isset($_GET['type']) ? $_GET['type'] : 0;
 
     $app = Template::App();
@@ -12,9 +12,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $form = file_get_contents('templates/form.html');
     $search = file_get_contents('templates/search.html');
 
-    $toast = file_get_contents('../components/toast.html');
-    $toast = str_replace(':message', 'Sucesso', $toast);
-    $app = str_replace(':toast', $toast, $app);
+    if (!$type && !$message) {
+        $app = str_replace(':toast', '', $app);
+    } else {
+        $toast = file_get_contents('../components/toast.html');
+        $toast = str_replace(':message', $msg, $toast);
+        $toast = str_replace(':type', $type, $toast);
+        $app = str_replace(':toast', $toast, $app);
+    }
     
     $btnSave = file_get_contents('../components/save-button.html');
     $btnDelete = file_get_contents('../components/delete-button.html');
@@ -64,8 +69,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
 } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id = isset($_POST['id']) ? $_POST['id'] : 0;
-    $color = isset($_POST['color']) ? $_POST['color'] : '';
-    $height = isset($_POST['height']) ? $_POST['height'] : 0;
     $measurement = isset($_POST['measurement']) ? $_POST['measurement'] : "";
 
     $action = isset($_POST['action']) ? $_POST['action'] : 0;
@@ -85,12 +88,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $result = $measure->destroy();
         }
     } catch (Exception $e) {
-        return header('Location: index.php?msg=ERROR:' . $e->getMessage());
+        return header('Location: index.php?type=error&msg=ERROR:' . $e->getMessage());
     }
 
     if ($result) {
-        return header("Location: index.php?type=alert-success&msg=$msg");
+        return header("Location: index.php?type=success&msg=$msg");
     } else {
-        return header("Location: index.php?type=alert-error&msg=Erro ao executar ação");
+        return header("Location: index.php?type=warning&msg=Erro ao executar ação");
     }
 }
